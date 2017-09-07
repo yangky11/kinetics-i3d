@@ -132,6 +132,18 @@ def main(unused_argv):
     for index in sorted_indices[:20]:
       print(out_predictions[index], out_logits[index], kinetics_classes[index])
 
+    import pickle
+    rgb_variables = sess.run(
+        rgb_variable_map,
+        feed_dict=feed_dict)
+    pickle.dump(rgb_variables, open('rgb_variables.pickle', 'wb'))
+    #print(rgb_variables.keys())
+    flow_variables = sess.run(
+        flow_variable_map,
+        feed_dict=feed_dict)
+    pickle.dump(flow_variables, open('flow_variables.pickle', 'wb'))
+    #print(flow_variables.keys())
+
 
 if __name__ == '__main__':
   tf.app.run(main)
