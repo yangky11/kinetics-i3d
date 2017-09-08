@@ -98,6 +98,7 @@ def main(unused_argv):
   model_predictions = tf.nn.softmax(model_logits)
 
   with tf.Session() as sess:
+    wt = tf.summary.FileWriter('runs/test_run', graph=sess.graph)
     feed_dict = {}
     if eval_type in ['rgb', 'joint']:
       if imagenet_pretrained:
@@ -122,7 +123,7 @@ def main(unused_argv):
     out_logits, out_predictions = sess.run(
         [model_logits, model_predictions],
         feed_dict=feed_dict)
-
+    
     out_logits = out_logits[0]
     out_predictions = out_predictions[0]
     sorted_indices = np.argsort(out_predictions)[::-1]
@@ -131,7 +132,8 @@ def main(unused_argv):
     print('\nTop classes and probabilities')
     for index in sorted_indices[:20]:
       print(out_predictions[index], out_logits[index], kinetics_classes[index])
-
+  
+    '''
     import pickle
     rgb_variables = sess.run(
         rgb_variable_map,
@@ -143,7 +145,8 @@ def main(unused_argv):
         feed_dict=feed_dict)
     pickle.dump(flow_variables, open('flow_variables.pickle', 'wb'))
     #print(flow_variables.keys())
-
+    '''
+    wt.close()
 
 if __name__ == '__main__':
   tf.app.run(main)
